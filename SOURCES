@@ -1,27 +1,44 @@
 Name: SystemRescueCd-x86-1.5.8
 Date: 2010-07-09
-Source: http://downloads.sourceforge.net/project/systemrescuecd/sysresccd-x86/1.5.8/systemrescuecd-x86-1.5.8.iso
+Image: systemrescuecd-x86-1.5.8.iso
+Source: http://downloads.sourceforge.net/project/systemrescuecd/sysresccd-x86/1.5.8/$IMG
 
 Name: KNOPPIX_V6.2.1DVD-2010-01-31-EN
 Date: 2010-01-31
-Source: http://torrent.unix-ag.uni-kl.de/torrents/KNOPPIX_V6.2.1DVD-2010-01-31-EN.torrent
+Image: $NAME.iso
+Source: http://torrent.unix-ag.uni-kl.de/torrents/$NAME.torrent
 
 Name: BackTrack 4 R1 Release ISO
 Date: 2010-05-08
-Source: http://www.offensive-security.com/bt4-r1.iso.torrent
+Image: bt4-r1.iso
+Source: http://www.offensive-security.com/$IMG.torrent
+linux: /boot/vmlinuz find_iso/filename=$IMGDIR/$IMG BOOT=casper boot=casper nopersistent rw vga=0x317--
+initrd: /boot/initrd.gz
 
 Name: Ubuntu 10.04.1 LTS (Lucid Lynx) Desktop 32-bit (i386)
 Date: 2010-08-16
-Source: http://releases.ubuntu.com/lucid/ubuntu-10.04.1-desktop-i386.iso.zsync
+Image: ubuntu-10.04.1-desktop-i386.iso
+Source: http://releases.ubuntu.com/lucid/$IMG.zsync
+linux: /casper/vmlinuz iso-scan/filename=$IMGDIR/$IMG boot=casper noeject noprompt --
+initrd: /casper/initrd.lz
 
 Name: Ubuntu 10.04.1 LTS (Lucid Lynx) Desktop 64-bit (amd64)
 Date: 2010-08-16
-Source: http://releases.ubuntu.com/lucid/ubuntu-10.04.1-desktop-amd64.iso.zsync
+Image: ubuntu-10.04.1-desktop-amd64.iso
+Source: http://releases.ubuntu.com/lucid/$IMG.zsync
+linux: /casper/vmlinuz iso-scan/filename=$IMGDIR/$IMG boot=casper noeject noprompt --
+initrd: /casper/initrd.lz
 
 Name: Debian testing daily build (i386)
 Date: 2010-08-22
-Source: http://cdimage.debian.org/cdimage/daily-builds/daily/arch-latest/i386/iso-cd/debian-testing-i386-netinst.iso.zsync
+Image: debian-testing-i386-netinst.iso
+Source: http://cdimage.debian.org/cdimage/daily-builds/daily/arch-latest/i386/iso-cd/$IMG.zsync
+linux: /install.386/vmlinuz vga=normal --
+initrd: /install.386/initrd.gz
 
 Name: Debian testing daily build (amd64)
 Date: 2010-08-22
-Source: http://cdimage.debian.org/cdimage/daily-builds/daily/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso.zsync
+Image: debian-testing-amd64-netinst.iso
+Source: http://cdimage.debian.org/cdimage/daily-builds/daily/arch-latest/amd64/iso-cd/$IMG.zsync
+linux: /install.amd/vmlinuz vga=normal --
+initrd: /install.amd/initrd.gz
