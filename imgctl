@@ -1,0 +1,31 @@
+#!/bin/sh
+
+if [ -z "$ROOT" ]; then
+	ROOT="$(readlink -f ./vroot)"
+fi
+
+if [ -z "$DEV" ]; then
+	DEV="$(grep "$ROOT" /etc/mtab)"
+	if [ -z "$DEV" ]; then
+		echo "DEV not defined; abort."
+		exit 1
+	else
+		DEV="$(echo "$DEV" | cut '-d ' -f1 | head -c-2)"
+	fi
+fi
+
+CMD="$1"
+shift
+
+case $CMD in
+-i | --install )
+	read -p "ROOT=$ROOT; DEV=$DEV; [y]? " x
+	if [ "$x" = "y" ]; then
+		/usr/sbin/grub-install --no-floppy --root-directory="$ROOT" "$DEV"
+		./gengrubcfg > "$ROOT/boot/grub/grub.cfg"
+	fi
+	;;
+-t | --test )
+	qemu-system-x86_64 -enable-kvm -M pc -hda "$DEV" -m 128 -vga std -boot c "$@"
+	;;
+esac

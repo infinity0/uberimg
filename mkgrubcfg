@@ -6,16 +6,25 @@ IMGDIR=/img
 st_open() { STANZA=true; echo "menuentry \"$1\" {"; }
 st_close() { STANZA=false; echo "}\n"; }
 
+cat << EOF
+set color_normal=red/black
+set color_highlight=black/red
+EOF
+
 cat SOURCES | { while read VAR VAL; do
 	if $STANZA; then
 		if [ -z "$VAR" ]; then st_close;
 		elif [ "$VAR" = "Image:" ]; then
 			IMG="$(eval echo "$VAL")"
 			echo "	loopback loop $IMGDIR/$IMG"
+		elif [ "$VAR" = "config:" ]; then
+			eval echo "\	configfile \(loop\)$VAL"
+		elif [ "$VAR" = "loopiso:" ]; then
+			ISO="$VAL"
 		elif [ "$VAR" = "linux:" ]; then
-			eval echo "\	linux \(loop\)$VAL"
+			eval echo "\	linux \(loop\)$VAL $ISO=$IMGDIR/$IMG"
 		elif [ "$VAR" = "initrd:" ]; then
-			eval echo "\	initrd $VAL"
+			eval echo "\	initrd \(loop\)$VAL"
 		fi
 	else
 		if [ "$VAR" = "Name:" ]; then
