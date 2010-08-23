@@ -1,5 +1,5 @@
 Name: Super Grub2 Disk
-Date: 2010-08-20
+Date: 2010-05-17
 Image: super_grub_disk_hybrid-1.98s1.iso
 Source: http://download.berlios.de/supergrub/$IMG
 config: /boot/grub/grub.cfg
