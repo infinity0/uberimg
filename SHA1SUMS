@@ -1,6 +1,8 @@
 768e97cb2406f58cab33fb4a5b929ffae403ebdb  ./bt4-r1.iso
 6f590d54a1df0dd8a05d83fab7433faf2c568a5a  ./debian-testing-amd64-netinst.iso
 5842380fcd97faa83ace3448b89357a4da131121  ./debian-testing-i386-netinst.iso
+66f767754bc064033e24583f59f984f34908fc91  ./grml_2010.04.iso
+0003789a6c0e0dc2a87ec7be0b93d72fae3f7d50  ./grml64_2010.04.iso
 967803e10489c1b706d650a5f2bebbb6b5bc1245  ./KNOPPIX_V6.2.1DVD-2010-01-31-EN.iso
 8e2fe8e388848f9d5402229d803d32dac9709557  ./super_grub_disk_hybrid-1.98s1.iso
 0c2e75b36d9cab333a3cbb9beabc914e355ecd66  ./systemrescuecd-x86-1.5.8.iso
