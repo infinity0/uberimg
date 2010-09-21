@@ -1,0 +1,2 @@
+#!/bin/sh
+exec gensums -012 "$@" -- -and -not -name 'isodetect.*' -and -not -regex '.*\(imgctl\|rehash\|mkgrubcfg\|SOURCES\)'

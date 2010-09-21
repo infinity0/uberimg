@@ -4,10 +4,10 @@ Image: super_grub_disk_hybrid-1.98s1.iso
 Source: http://download.berlios.de/supergrub/$IMG
 config: /boot/grub/grub.cfg
 
-Name: SystemRescueCd-x86-1.5.8
-Date: 2010-07-09
-Image: systemrescuecd-x86-1.5.8.iso
-Source: http://downloads.sourceforge.net/project/systemrescuecd/sysresccd-x86/1.5.8/$IMG
+Name: SystemRescueCd-x86-1.6.0
+Date: 2010-09-13
+Image: systemrescuecd-x86-1.6.0.iso
+Source: http://downloads.sourceforge.net/project/systemrescuecd/sysresccd-x86/1.6.0/$IMG
 loopiso: isoloop
 linux: /isolinux/rescuecd root=/dev/ram
 initrd: /isolinux/initram.igz
