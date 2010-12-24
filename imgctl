@@ -22,7 +22,7 @@ case $CMD in
 	read -p "ROOT=$ROOT; DEV=$DEV; [y]? " x
 	if [ "$x" = "y" ]; then
 		/usr/sbin/grub-install --no-floppy --root-directory="$ROOT" "$DEV"
-		./gengrubcfg > "$ROOT/boot/grub/grub.cfg"
+		./mkgrubcfg > "$ROOT/boot/grub/grub.cfg"
 	fi
 	;;
 -t | --test )
