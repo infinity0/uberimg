@@ -1,31 +1,237 @@
 #!/bin/sh
+# Utility to create bootable disk images and/or devices.
 
-if [ -z "$ROOT" ]; then
-	ROOT="$(readlink -f ./vroot)"
+# variables. these can be overridden by the user
+
+FDISK=${FDISK:-}
+#QEMU_OPTS="-m 128 -vga std"
+QEMU_OPTS="$QEMU_OPTS -enable-kvm"
+# part_msdos needs to be explicitly given since released grub-install cannot
+# detect loop device partitions properly. (experimental branch can do this)
+GRUB_OPTS="$GRUB_OPTS --no-floppy --modules=part_msdos"
+
+###############################################################################
+
+USAGE="Usage: $0 {--help|<CMD>} <ARGS>"
+
+# provide access to some admin utilities
+PATH="$PATH:/sbin:/usr/sbin"
+
+# set variable defaults
+FDISK_DEFAULT=fdisk
+if [ -n "$DISPLAY" ] && which gparted >/dev/null; then FDISK_DEFAULT=gparted; fi
+FDISK=${FDISK:-$FDISK_DEFAULT}
+
+ERR_NO_2_LOOPDEV="need at least 2 loop devices to infer loop.max_part"
+ERR_LOOP_BUILTIN="your loop module is a kernel builtin.
+You need to add loop.max_part=xx to your kernel parameters[1], where xx>=1
+(recommended >=15), then restart your computer."
+if [ -f /etc/debian_version ]; then
+ERR_LOOP_BUILTIN="$ERR_LOOP_BUILTIN
+[1]On a Debian-based system, you can do this by editing GRUB_CMDLINE_LINUX in
+/etc/default/grub, then run sudo update-grub."
 fi
+ASK_FDISK_BEHAVE="I will now run $FDISK twice:
+the 1st time, please only modify partitions (no new filesystems);
+the 2nd time, please only modify filesystems (no partition changes).
+Proceed?"
 
-if [ -z "$DEV" ]; then
-	DEV="$(grep "$ROOT" /etc/mtab)"
-	if [ -z "$DEV" ]; then
-		echo "DEV not defined; abort."
-		exit 1
+require_accept() {
+	read -p "$1 [y/N] " x
+	if [ "$x" != "y" ]; then return 1; fi
+}
+
+allow_reject() {
+	read -p "$1 [Y/n] " x
+	if [ "$x" = "n" ]; then return 1; fi
+}
+
+fdisk_can_mkfs() {
+	case "$FDISK" in
+	gparted )
+		return 0;;
+	fdisk | cfdisk | sfdisk )
+		return 1;;
+	* )
+		return 0;;
+	esac
+}
+
+infer_loop_max_part() {
+	if [ ! -e /dev/loop1 ]; then echo "$ERR_NO_2_LOOPDEV"; exit 1; fi
+	expr $((0x$(stat -c %T /dev/loop1))) - $((0x$(stat -c %T /dev/loop0))) - 1
+}
+
+ensure_loop_part() {
+	if ! modinfo loop >/dev/null; then LOOP_BUILTIN=true; else LOOP_BUILTIN=false; fi
+
+	if $LOOP_BUILTIN; then
+		#LOOP_MAX_PART=$(modprobe -c | grep 'options loop max_part' | cut -d= -f2)
+		LOOP_MAX_PART=$(infer_loop_max_part)
+	elif [ -f /sys/modules/loop/parameters/max_part ]; then
+		# at time of writing, this feature is not yet released
+		LOOP_MAX_PART=$(< /sys/modules/loop/parameters/max_part)
 	else
-		DEV="$(echo "$DEV" | cut '-d ' -f1 | head -c-2)"
+		LOOP_MAX_PART=$(infer_loop_max_part)
 	fi
-fi
+
+	LOOP_MAX_PART=$(expr "0$LOOP_MAX_PART" + 0)
+	echo "detected loop.max_part=$LOOP_MAX_PART"
+	if [ "$LOOP_MAX_PART" -ge 15 ]; then
+		return
+	elif [ "$LOOP_MAX_PART" -ge 1 ]; then
+		allow_reject "this is a bit low; set this to 63?" || return
+	fi
+
+	if $LOOP_BUILTIN; then
+		echo "$ERR_LOOP_BUILTIN"
+		return 1
+	else
+		echo "reloading kernel module loop with max_part=63"
+		sudo modprobe -r loop || return 1
+		sudo modprobe loop max_part=63 || return 1
+	fi
+}
+
+loopdev_for_image() {
+	sudo losetup -j "$1" | head -n1 | cut -d: -f1
+}
+
+blockdev_for_dir() {
+	df -P "$1" | tail -n1 | cut '-d ' -f1
+}
+
+device_ancestor() {
+	CDEV=$1
+	while [ -n "$CDEV" -a "$CDEV" != "${CDEV%?}/" ]; do
+		PARENTS="$PARENTS $CDEV"
+		CDEV=${CDEV%?}
+	done
+	ls -1 $PARENTS 2>/dev/null | head -n1
+}
+
+is_mounted() {
+	mount | cut '-d ' -f1 | grep -qFx "$1"
+}
+
+is_loopdev() {
+	ls -1 /dev/loop* | grep -qFx "$1"
+}
 
 CMD="$1"
-shift
+if [ -n "$1" ]; then shift; fi
 
-case $CMD in
--i | --install )
-	read -p "ROOT=$ROOT; DEV=$DEV; [y]? " x
-	if [ "$x" = "y" ]; then
-		/usr/sbin/grub-install --no-floppy --root-directory="$ROOT" "$DEV"
-		./mkgrubcfg > "$ROOT/boot/grub/grub.cfg"
+case "$CMD" in
+c | create )
+	IMAGE=${1}
+	FSIZE=${2:-17179869184}
+
+	set -o errexit
+	touch "$IMAGE"
+	ensure_loop_part
+
+	dd if=/dev/zero of="$IMAGE" bs=1 count=0 seek="$FSIZE" 2>/dev/null
+
+	if fdisk_can_mkfs; then require_accept "$ASK_FDISK_BEHAVE"; fi
+	sudo $FDISK "$IMAGE"
+
+	if ! fdisk_can_mkfs; then return; fi
+	cleanup() { sleep 1; sudo losetup -d "$DEV"; }
+	DEV=$(sudo losetup --show -f "$IMAGE")
+	trap cleanup EXIT INT TERM KILL
+	sudo blockdev --rereadpt "$DEV"
+	sudo $FDISK "$DEV"
+	;;
+m | mount )
+	IMAGE=${1}
+	MOUNTPT=${2}
+	PARTNUM=${3:-1}
+
+	set -o errexit
+	head -c0 "$IMAGE"
+	mkdir -p "$MOUNTPT"
+	ensure_loop_part
+
+	DEV=$(loopdev_for_image "$IMAGE")
+	DEV=${DEV:-$(sudo losetup --show -f "$IMAGE")}
+	if is_mounted "${DEV}p$PARTNUM"; then return; fi
+	sudo mount "${DEV}p$PARTNUM" "$MOUNTPT"
+	;;
+u | umount )
+	TARGET=${1}
+
+	set -o errexit
+	if [ -f "$TARGET" ]; then
+		TESTDEV=$(loopdev_for_image "$TARGET")
+	elif [ -d "$TARGET" ]; then
+		mountpoint -q "$TARGET" && TESTDEV=$(blockdev_for_dir "$TARGET")
+	elif [ -b "$TARGET" ]; then
+		TESTDEV=$TARGET
+	fi
+	if ! is_loopdev "$TESTDEV"; then echo >&2 "could not find a loop device for: $TARGET"; return 1; fi
+
+	LOOPDEV=$(device_ancestor "$TESTDEV")
+	if [ "$LOOPDEV" = "$TESTDEV" ]; then
+		echo "unmount all under $LOOPDEV"
+		for i in "$LOOPDEV"*; do
+			if is_mounted "$i"; then sudo umount "$i"; fi
+		done
+		sudo losetup -d "$LOOPDEV"
+		sudo blockdev --rereadpt "$LOOPDEV"
+	elif is_mounted "$TESTDEV"; then
+		sudo umount "$TESTDEV"
 	fi
 	;;
--t | --test )
-	qemu-system-x86_64 -enable-kvm -M pc -hda "$DEV" -m 128 -vga std -boot c "$@"
+i | install )
+	BOOT=${1}
+	DEV=${2:-$(device_ancestor "$(blockdev_for_dir "$1")")} || exit 1
+
+	set -o errexit
+	#mkdir -p "$BOOT"
+	mountpoint -x "$DEV" >/dev/null
+
+	require_accept "BOOT=$BOOT; DEV=$DEV; install?"
+	sudo -k  # for extra safety
+	sudo /usr/sbin/grub-install $GRUB_OPTS --boot-directory="$BOOT" "$DEV"
+	./mkgrubcfg | sudo tee "$BOOT/grub/grub.cfg" >/dev/null
+	;;
+t | test )
+	TARGET=${1}
+	sync # ensure recent changes synced to disk
+	if [ -b "$TARGET" ]; then sudo chown $(id -u) "$TARGET"*; fi
+	qemu-system-$(uname -m) $QEMU_OPTS "$TARGET"
+	;;
+h | help | -h | --help )
+	cat >&2 <<-EOF
+	$USAGE
+
+	Commands (initials also work, e.g. i for install):
+
+	create <image> [<size>]
+	    Create a virtual disk <image> (raw format) of size <size>.
+	    default <size>: 16 GiB
+
+	mount <image> <partnum> <mount_dir>
+	    Mount (the <partnum>th partition of a virtual disk <image>) onto <mount_dir>.
+	    (You may use this to mount the boot partition for other commands.)
+
+	umount <image|device|mount_dir>
+	    Free the disk loop device for <image|device|mount_dir>, and unmount all its partitions.
+	    Or, unmount the disk partition for <device|mount_dir>, but *do not free* the loop device.
+
+	install <boot_dir> [<device>]
+	    Use grub-install onto <device>, into <boot_dir>.
+	    default <device>: ancestor of mountpoint device for <boot_dir>
+	      e.g. <boot_dir>/../ mounted at /dev/sda1 -> <device> = /dev/sda
+	      e.g. <boot_dir> mounted at /dev/loop0p3 -> <device> = /dev/loop0
+
+	test <image|device>
+	    Use qemu-system-\$(uname -m) to test <image|device>.
+
+	EOF
+	;;
+* )
+	echo >&2 "$USAGE"
+	exit 2
 	;;
 esac
