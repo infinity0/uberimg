@@ -1,0 +1,16 @@
+This package lets you create a medium with multiple GNU/linux ISOs on it, each
+of them chain-bootable when the medium itself is booted.
+
+This requires GRUB2 version 1.99 or later.
+
+Instructions:
+
+- prepare your device. you can create a virtual disk image file using `./imgctl create`
+- mount your device's boot partition onto some $MNT directory
+- let $BOOT be the boot directory, which should either be $MNT or $MNT/boot
+- copy your ISOs to $BOOT/iso (or $BOOT/bootiso or $BOOT/img)
+- run ./imgctl install $BOOT $DEVICE
+- copy isodetect.cfg to $BOOT/grub/grub.cfg on your medium
+
+- test your device. (if it's a image file, you can use `./imgctl test` to test it with QEMU.)
+- the isodetect should detect most linux ISOs, and make them bootable
