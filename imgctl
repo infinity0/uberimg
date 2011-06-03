@@ -5,10 +5,10 @@
 
 FDISK=${FDISK:-}
 #QEMU_OPTS="-m 128 -vga std"
-QEMU_OPTS="$QEMU_OPTS -enable-kvm"
+QEMU_OPTS="-enable-kvm $QEMU_OPTS"
 # part_msdos needs to be explicitly given since released grub-install cannot
 # detect loop device partitions properly. (experimental branch can do this)
-GRUB_OPTS="$GRUB_OPTS --no-floppy --modules=part_msdos"
+GRUB_OPTS="--no-floppy --modules=part_msdos $GRUB_OPTS"
 
 ###############################################################################
 
@@ -25,12 +25,8 @@ FDISK=${FDISK:-$FDISK_DEFAULT}
 ERR_NO_2_LOOPDEV="need at least 2 loop devices to infer loop.max_part"
 ERR_LOOP_BUILTIN="your loop module is a kernel builtin.
 You need to add loop.max_part=xx to your kernel parameters[1], where xx>=1
-(recommended >=15), then restart your computer."
-if [ -f /etc/debian_version ]; then
-ERR_LOOP_BUILTIN="$ERR_LOOP_BUILTIN
-[1]On a Debian-based system, you can do this by editing GRUB_CMDLINE_LINUX in
-/etc/default/grub, then run sudo update-grub."
-fi
+(recommended >=15), then restart your computer. You can do this by editing
+GRUB_CMDLINE_LINUX in /etc/default/grub, then run sudo update-grub."
 ASK_FDISK_BEHAVE="I will now run $FDISK twice:
 the 1st time, please only modify partitions (no new filesystems);
 the 2nd time, please only modify filesystems (no partition changes).
@@ -137,7 +133,8 @@ c | create )
 
 	if ! fdisk_can_mkfs; then return; fi
 	cleanup() { sleep 1; sudo losetup -d "$DEV"; }
-	DEV=$(sudo losetup --show -f "$IMAGE")
+	DEV=$(loopdev_for_image "$IMAGE")
+	DEV=${DEV:-$(sudo losetup --show -f "$IMAGE")}
 	trap cleanup EXIT INT TERM KILL
 	sudo blockdev --rereadpt "$DEV"
 	sudo $FDISK "$DEV"
@@ -193,7 +190,7 @@ i | install )
 	require_accept "BOOT=$BOOT; DEV=$DEV; install?"
 	sudo -k  # for extra safety
 	sudo /usr/sbin/grub-install $GRUB_OPTS --boot-directory="$BOOT" "$DEV"
-	./mkgrubcfg | sudo tee "$BOOT/grub/grub.cfg" >/dev/null
+	sudo cp ./isodetect.cfg "$BOOT/grub/grub.cfg"
 	;;
 t | test )
 	TARGET=${1}
