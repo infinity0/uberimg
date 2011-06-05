@@ -1,10 +1,12 @@
-f393714a97862398ec2eaba1a5157784  ./bt4-r1.iso
+75c4e7a969abc873d9e085656b156345  ./BT5-GNOME-64.iso
 9710d47cdf603766fffbaf96c4e9185d  ./debian-testing-amd64-netinst.iso
 b5869a18abbf5f41953205d0cc5594b4  ./debian-testing-i386-netinst.iso
-c40ec885a99e40aef322fef7ac152cb3  ./grml_2010.04.iso
-989e48324da6972997ca7bad41f6b048  ./grml64_2010.04.iso
+53363d77772b1ceb0ce5a83f30eba20c  ./grml_2011.05.iso
+6f9e78cd8ed356fbba111df291f57011  ./grml64_2011.05.iso
 c29e505256e84ccb1943d92b6e6c5b24  ./KNOPPIX_V6.2.1DVD-2010-01-31-EN.iso
+773b6cdfe44b91bc44448fa7b34bffa8  ./linuxmint-11-gnome-dvd-64bit.iso
+65bc3f151733bd5cd6d0e25f1305b31c  ./slax-6.1.2.iso
 a9cdc2e74a012ed5c746ad0dd8ee299c  ./super_grub_disk_hybrid-1.98s1.iso
 40dc2997cc3e7b5b71c5fe85319e3ec9  ./systemrescuecd-x86-2.1.1.iso
-b4faa186c2419dc26e522e5f82e268a1  ./ubuntu-10.04.1-desktop-amd64.iso
-9a95ed6f6ec38fb58c446dba1add6a08  ./ubuntu-10.04.1-desktop-i386.iso
+7de611b50c283c1755b4007a4feb0379  ./ubuntu-11.04-desktop-amd64.iso
+8b1085bed498b82ef1485ef19074c281  ./ubuntu-11.04-desktop-i386.iso

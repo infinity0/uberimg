@@ -1,10 +1,12 @@
-768e97cb2406f58cab33fb4a5b929ffae403ebdb  ./bt4-r1.iso
+bd3e5c1b45ef7c44e89e276505e088771e5b11bc  ./BT5-GNOME-64.iso
 6f590d54a1df0dd8a05d83fab7433faf2c568a5a  ./debian-testing-amd64-netinst.iso
 5842380fcd97faa83ace3448b89357a4da131121  ./debian-testing-i386-netinst.iso
-66f767754bc064033e24583f59f984f34908fc91  ./grml_2010.04.iso
-0003789a6c0e0dc2a87ec7be0b93d72fae3f7d50  ./grml64_2010.04.iso
+9e6be3ae5e21c12c26239cb7de6e7fb26ae29e91  ./grml_2011.05.iso
+9e013c98145cefb2caf8b6e3c9ff718ea31c599a  ./grml64_2011.05.iso
 967803e10489c1b706d650a5f2bebbb6b5bc1245  ./KNOPPIX_V6.2.1DVD-2010-01-31-EN.iso
+7764b4681ddde88f31deb79dfbd25d433ef9e527  ./linuxmint-11-gnome-dvd-64bit.iso
+30e3d14206f97c206a39c9516dd71612117bafc2  ./slax-6.1.2.iso
 8e2fe8e388848f9d5402229d803d32dac9709557  ./super_grub_disk_hybrid-1.98s1.iso
 58b02a1e05884ed35d2cf56f965c9075aaae10bc  ./systemrescuecd-x86-2.1.1.iso
-8683b9d531e1dc693e72bb1f59026195bfa5293d  ./ubuntu-10.04.1-desktop-amd64.iso
-c413b150859cdc49ddd86bfd890216e6e084e034  ./ubuntu-10.04.1-desktop-i386.iso
+f7b0d2b90fbd49794419338c2b9157c095b11bda  ./ubuntu-11.04-desktop-amd64.iso
+f54bc1a298d74bb5551f153bdb7e1348c6b94d99  ./ubuntu-11.04-desktop-i386.iso
