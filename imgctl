@@ -55,7 +55,7 @@ fdisk_can_mkfs() {
 
 infer_loop_max_part() {
 	if [ ! -e /dev/loop1 ]; then echo "$ERR_NO_2_LOOPDEV"; exit 1; fi
-	expr $((0x$(stat -c %T /dev/loop1))) - $((0x$(stat -c %T /dev/loop0))) - 1
+	expr $((0x$(stat -c %T /dev/loop1))) - $((0x$(stat -c %T /dev/loop0))) - 1 || true
 }
 
 ensure_loop_part() {
@@ -71,7 +71,7 @@ ensure_loop_part() {
 		LOOP_MAX_PART=$(infer_loop_max_part)
 	fi
 
-	LOOP_MAX_PART=$(expr "0$LOOP_MAX_PART" + 0)
+	LOOP_MAX_PART=$(expr "0$LOOP_MAX_PART" + 0 || true)
 	echo "detected loop.max_part=$LOOP_MAX_PART"
 	if [ "$LOOP_MAX_PART" -ge 15 ]; then
 		return
