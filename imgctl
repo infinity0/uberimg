@@ -190,7 +190,7 @@ i | install )
 	require_accept "BOOT=$BOOT; DEV=$DEV; install?"
 	sudo -k  # for extra safety
 	sudo /usr/sbin/grub-install $GRUB_OPTS --boot-directory="$BOOT" "$DEV"
-	sudo cp ./isodetect.cfg "$BOOT/grub/grub.cfg"
+	sudo cp ./grub.cfg ./isodetect.cfg "$BOOT/grub/"
 	;;
 t | test )
 	TARGET=${1}
