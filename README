@@ -5,17 +5,22 @@ This requires GRUB2 version 1.99 or later.
 
 Instructions:
 
-- prepare your device. you can create a virtual disk image file using `./imgctl create`
-- mount your device's boot partition onto some $MNT directory
-- let $BOOT be the boot directory, which should either be $MNT/ or $MNT/boot/
-- copy your ISOs to $BOOT/img/
-- copy any overrides to $BOOT/linux/ and $BOOT/initrd/
-	- the override for XXXX.iso should be named XXXX.*
-	- e.g. XXXX.vmlinuz or XXXX.initrd.gz
-	- e.g. Backtrack 5 needs a newer version of casper-generated /scripts/ for its initrd
-- run ./imgctl install $BOOT $DEVICE
-- copy isodetect.cfg to $BOOT/grub/grub.cfg on your medium
+- insert your physical device, or create a virtual disk image file using `./imgctl create`
+- install the bootloader
+	- mount your device's boot partition onto some $MNT directory
+		- let $BOOT be the boot directory, which should either be $MNT/ or $MNT/boot/
+	- run ./imgctl install $BOOT $DEVICE
+- install your data
+	- mount your device's data partition onto some $MNT directory.
+		- this can be the same as $MNT above, or different. it's up to you.
+		- let $DATA be the data directory, which should either be $MNT/ or $MNT/boot/
+	- copy your ISOs to $DATA/img/
+	- copy any overrides (if you have/need any, which should be rare) to $DATA/linux/ and $DATA/initrd/
+		- the override for XXXX.iso should be named XXXX.*
+		- e.g. XXXX.vmlinuz or XXXX.initrd.gz
+		- e.g. Backtrack 5 needs a newer version of casper-generated /scripts/ for its initrd
+- use `./imgctl test <image file|device>` to test it with QEMU.
 
-- test your device. if it's a image file, you can use `./imgctl test` to test it with QEMU.
-- the isodetect should detect most linux ISOs, and make them bootable
-
+If you get "Unsupported ISO type" for any of your ISOs, file me a bug! If this
+script can be modified to support it, I will do so; otherwise I will tell you to
+file a bug to the upstream ISO developers.
