@@ -1,0 +1,4 @@
+version=3
+http://www.supergrubdisk.org/category/download/supergrub2diskdownload/ \
+  http://download.berlios.de/supergrub/super_grub2_disk_hybrid_(.+).iso \
+  debian ./uscan

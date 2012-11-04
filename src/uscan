@@ -1,0 +1,38 @@
+#!/bin/sh
+# Uses debian's uscan utility to download newer versions of ISOs when they become available.
+# USCAN_OPTS=--debug ./uscan
+# USCAN_OPTS=--force-download ./uscan
+
+cd "$(dirname "$0")"
+
+BIN=../bin
+
+uscan_watch() {
+	local package="${1%.watch}"
+	local version=0
+	if [ -f "$package.version" ]; then
+		if [ -f "$BIN/$(cut -f2 $package.version)" ]; then
+			version="$(cut -f1 $package.version)"
+		fi
+	fi
+	export USCAN_PACKAGE="$package"
+	uscan $USCAN_OPTS --upstream-version "$version" --package "$package" --watchfile "$package.watch" --download --pasv --destdir "$BIN"
+}
+
+case "$1" in
+--upstream-version)
+	echo "$2	$3" > "$USCAN_PACKAGE.version"
+	;;
+"")
+	for i in *.watch; do
+		uscan_watch "$i"
+	done
+	;;
+*)
+	if [ -f "$1" ]; then
+		uscan_watch "$1"
+	else
+		exit 2
+	fi
+	;;
+esac

@@ -1,0 +1,3 @@
+version=3
+http://torrent.unix-ag.uni-kl.de/torrents/KNOPPIX_V(.+)DVD-(?:[\w-]+)-EN.torrent \
+  debian ./uscan

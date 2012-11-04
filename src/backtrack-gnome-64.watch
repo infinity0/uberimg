@@ -1,0 +1,4 @@
+version=3
+#www.backtrack-linux.org/ajax/download_redirect.php?id=.
+opts=uversionmangle=tr/a-z/A-Z/ ftp://ftp.halifax.rwth-aachen.de/backtrack/BT(\d+)(.+)-GNOME-64.torrent \
+  debian ./uscan

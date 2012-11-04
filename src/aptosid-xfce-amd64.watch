@@ -1,0 +1,5 @@
+version=3
+ftp://ftp.spline.de/pub/aptosid/release/aptosid-(?:[\w-]+)-xfce-amd64-(.+).iso \
+  debian ./uscan
+ftp://aptosid.mirrorcatalogs.com/aptosid/release/aptosid-(?:[\w-]+)-xfce-amd64-(.+).iso \
+  debian ./uscan
