@@ -1,0 +1,4 @@
+/bin/*.iso
+/bin/*.iso.*
+/bin/*.torrent
+/bin/*.zsync
