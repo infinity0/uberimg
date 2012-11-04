@@ -1,2 +1,2 @@
 #!/bin/sh
-exec gensums -012 "$@" -- -and -not -name "$(basename $0)"
+exec gensums -012 "$@" -- -and -not -name "$(basename $0)" -and -not -name '*.torrent'
