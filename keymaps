@@ -1,0 +1,37 @@
+#!/bin/sh
+# Install keymaps into $1/grub and menu entries to switch between them in
+# $1/grub/keymaps.cfg, which may be sourced in a user-customised grub.cfg.
+
+install_keymap() {
+	local desc="$1"
+	local file="$2"
+	local keymap="$2"
+	if [ -n "$3" ]; then
+		file="$2-$3"
+		keymap="$2($3)"
+	fi
+	ckbcomp -compact "$keymap" | grub-mklayout -o "$file.gkb"
+	cat <<EOF
+menuentry "Change to $1 keymap" {
+	keymap /grub/$file.gkb
+}
+EOF
+	echo >&2 "installed $1"
+}
+
+grubdir="${1:-.}"
+grubcfg="$grubdir/grub/grub.cfg"
+
+test -f "$grubcfg" || { echo >&2 "does not exist: $grubcfg"; exit 1; }
+cd "$grubdir/grub"
+
+echo >&2 "installing into $grubdir/grub/keymaps.cfg"
+
+{
+echo "terminal_input at_keyboard"
+# TODO(infinity0): make this take input from a config file
+install_keymap "UK Dvorak" gb dvorak
+install_keymap "US Dvorak" dvorak
+install_keymap "UK" gb
+install_keymap "US" us
+} > keymaps.cfg
