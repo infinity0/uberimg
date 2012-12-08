@@ -8,7 +8,8 @@ FDISK=${FDISK:-}
 QEMU_OPTS="-enable-kvm $QEMU_OPTS"
 # part_msdos needs to be explicitly given since released grub-install cannot
 # detect loop device partitions properly. (experimental branch can do this)
-GRUB_OPTS="--no-floppy --modules=part_msdos $GRUB_OPTS"
+GRUB_OPTS="--no-floppy $GRUB_OPTS"
+GRUB_MODULES="part_gpt luks cryptodisk"
 
 ###############################################################################
 
@@ -189,7 +190,7 @@ i | install )
 
 	require_accept "BOOT=$BOOT; DEV=$DEV; install?"
 	sudo -k  # for extra safety
-	sudo /usr/sbin/grub-install $GRUB_OPTS --boot-directory="$BOOT" "$DEV"
+	sudo /usr/sbin/grub-install --modules="$GRUB_MODULES" $GRUB_OPTS --boot-directory="$BOOT" "$DEV"
 	sudo cp ./grub.cfg ./isodetect.cfg "$BOOT/grub/"
 	;;
 t | test )
