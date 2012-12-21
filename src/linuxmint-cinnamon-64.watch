@@ -1,3 +1,3 @@
 version=3
-http://linuxmint.mirrorcatalogs.com/iso/stable/([\d\.]+)/linuxmint-(.+)-cinnamon-dvd-64bit.iso \
+http://linuxmint.mirrorcatalogs.com/iso/stable/(\d[\.\d]+)/linuxmint-(.+)-cinnamon-dvd-64bit.iso \
   debian ./uscan
