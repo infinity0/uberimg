@@ -1,4 +1,4 @@
 version=3
 ftp://ftp.mirrorservice.org/sites/releases.ubuntu.com/(\d+\.\d+)/ubuntu-(.+)-desktop-amd64.iso.torrent \
   debian ./uscan
-# currently uscan has a bug which stops this from working. TODO report it
+# can't just use (.+) for dir pattern due to debian bug #696492
