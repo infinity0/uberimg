@@ -1,0 +1,3 @@
+version=3
+http://downloads.raspberrypi.org/images/raspbian/(.+)-raspbian/(.+)-raspbian.zip.torrent \
+  debian ./uscan
