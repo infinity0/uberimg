@@ -1,10 +1,10 @@
 19786b690737e7edceac9b35a67c6c9591d3f561  ./aptosid-2013-01-hesperides-kde-full-i386-amd64-201305050307.iso
 ab59651d60499eddb7e0d495e33e53157a5f66f1  ./aptosid-2013-01-hesperides-xfce-amd64-201305050307.iso
-c95df860f1c08cd7e82ddeac4918bb29cb3f0b7d  ./grml96-full_2013.02.iso
-bb14f4e1fc0656a14615e40d727f6c49e8202d38  ./kali-linux-1.0.4-amd64.iso
-05be5387b2ae0fed6ebeaacbd7db62e93db9e732  ./linuxmint-15-cinnamon-dvd-64bit.iso
-1ee331c1cc81659650b9a2fe0a59999444176a56  ./slax-English-UK-7.0.8-x86_64.iso
+19ee12f86c349e539aca1665a1959dcb1e589910  ./grml96-full_2013.09.iso
+914eebd1ae64015d4d8b2281143caa466d44b280  ./kali-linux-1.0.5-amd64.iso
+7028e2427a811a2ef7d72f4e269291ae8376aea5  ./linuxmint-16-cinnamon-dvd-64bit.iso
+80d8fc94b632f90840c9e151c41893bb63a910c7  ./slax-7.0.9-beta-x86_64.iso
 8edcb03039adc5c0743e93c04157bcb30e676a36  ./super_grub2_disk_hybrid_2.00s1-beta1.iso
-8bde400712e5fca834598b240569508a358da583  ./systemrescuecd-x86-3.7.1.iso
-628d3d7b2b190a8b1710d14db9e89436a60b0974  ./tails-i386-0.20.iso
-cb1afefcd9fb01d8bc02e53de63e70a2f6a6e7de  ./ubuntu-12.04-desktop-amd64.iso
+79bc4a288ddbbdc3a7f8d064ffa3a86611fc8bd7  ./systemrescuecd-x86-3.8.1.iso
+7566a338e3752d9f43cbba7d388ab50c6c874036  ./tails-i386-0.22.iso
+3bcd2de27a219eae7bcc0ca060a767f86c7ad160  ./ubuntu-13.10-desktop-amd64.iso
