@@ -16,7 +16,7 @@ uscan_watch() {
 		fi
 	fi
 	export USCAN_PACKAGE="$package"
-	uscan $USCAN_OPTS --upstream-version "$version" --package "$package" --watchfile "$package.watch" --download --pasv --destdir "$BIN"
+	uscan $USCAN_OPTS --no-symlink --upstream-version "$version" --package "$package" --watchfile "$package.watch" --download --pasv --destdir "$BIN"
 }
 
 case "$1" in
