@@ -1,15 +1,20 @@
 #!/bin/sh
 # Utility to create bootable disk images and/or devices.
 
-# variables. these can be overridden by the user
+# Extra modules for your GRUB install, normally can be empty. For example,
+#
+# "luks cryptodisk" if you put your ISOs on an encrypted partition
+# "part_gpt" if you create a GPT partition table
+# "part_msdos" if you're testing from a loopback device, since released
+#     grub-install cannot detect loop device partitions properly.
+#     (experimental branch can do this, it's unnecessary there.)
+GRUB_MODULES="${GRUB_MODULES:-}"
+
+GRUB_OPTS="--no-floppy $GRUB_OPTS"
 
 FDISK=${FDISK:-}
-#QEMU_OPTS="-m 128 -vga std"
+
 QEMU_OPTS="-enable-kvm $QEMU_OPTS"
-# part_msdos needs to be explicitly given since released grub-install cannot
-# detect loop device partitions properly. (experimental branch can do this)
-GRUB_OPTS="--no-floppy $GRUB_OPTS"
-GRUB_MODULES="part_gpt luks cryptodisk"
 
 ###############################################################################
 
