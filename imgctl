@@ -135,7 +135,7 @@ c | create )
 	dd if=/dev/zero of="$IMAGE" bs=1 count=0 seek="$FSIZE" 2>/dev/null
 
 	if fdisk_can_mkfs; then require_accept "$ASK_FDISK_BEHAVE"; fi
-	sudo $FDISK "$IMAGE"
+	sudo $FDISK "$IMAGE" || true # gparted has weird exit codes sometimes
 
 	if ! fdisk_can_mkfs; then return; fi
 	cleanup() { sleep 1; sudo losetup -d "$DEV"; }
@@ -193,6 +193,10 @@ i | install )
 	#mkdir -p "$BOOT"
 	mountpoint -x "$DEV" >/dev/null
 
+	# part_msdos needs to be explicitly given since released grub-install cannot
+	# detect loop device partitions properly. (experimental branch can do this)
+	test "${DEV#/dev/loop}" != "${DEV}" && GRUB_MODULES="$GRUB_MODULES part_msdos part_gpt"
+
 	require_accept "BOOT=$BOOT; DEV=$DEV; install?"
 	sudo -k  # for extra safety
 	sudo /usr/sbin/grub-install --modules="$GRUB_MODULES" $GRUB_OPTS --boot-directory="$BOOT" "$DEV"
@@ -214,7 +218,7 @@ h | help | -h | --help )
 	    Create a virtual disk <image> (raw format) of size <size>.
 	    default <size>: 16 GiB
 
-	mount <image> <partnum> <mount_dir>
+	mount <image> <mount_dir> <partnum>
 	    Mount (the <partnum>th partition of a virtual disk <image>) onto <mount_dir>.
 	    (You may use this to mount the boot partition for other commands.)
 
