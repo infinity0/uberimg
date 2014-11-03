@@ -1,4 +1,5 @@
 version=3
+# these guys have a brain-damaged version scheme, so use the file index as part of our local version
 http://www.supergrubdisk.org/category/download/supergrub2diskdownload/ \
-  http://download.berlios.de/supergrub/super_grub2_disk_hybrid_(.+).iso \
+http://forja.cenatic.es/frs/download.php/file/(.+)/super_grub2_disk_hybrid_(.+).iso \
   debian ./uscan
