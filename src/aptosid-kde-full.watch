@@ -1,3 +1,3 @@
 version=3
-ftp://debian.tu-bs.de/project/aptosid/release/aptosid-(?:[\w-]+)-kde-full-i386-amd64-(.+).iso \
+http://debian.tu-bs.de/project/aptosid/release/aptosid-(?:[\w-]+)-kde-full-i386-amd64-(.+).iso \
   debian ./uscan
