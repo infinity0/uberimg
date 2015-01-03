@@ -201,6 +201,15 @@ i | install )
 	sudo -k  # for extra safety
 	sudo /usr/sbin/grub-install --modules="$GRUB_MODULES" $GRUB_OPTS --boot-directory="$BOOT" "$DEV"
 	sudo cp ./grub.cfg ./isodetect.cfg "$BOOT/grub/"
+	if ! mountpoint -q "$BOOT"; then
+		if mountpoint -q "$BOOT/.." && [ "$(basename "$BOOT")" = "boot" ]; then
+			sed -i -re 's,(\s)/grub/,\1/boot/grub/,g' "$BOOT/grub/grub.cfg"
+		else
+			echo >&2 "non-standard layout detected: you probably need to manually fix the paths in "
+			echo >&2 "$BOOT/grub/grub.cfg - and even then things might not work "
+			echo >&2 "due to the path assumptions in isodetect.cfg"
+		fi
+	fi
 	;;
 t | test )
 	TARGET=${1}
