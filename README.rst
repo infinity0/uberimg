@@ -12,15 +12,15 @@ Instructions
 1.  Either (a) insert your physical device (then umount all partitions, if your system does auto-mounting), or (b) create a virtual disk image file using ``./imgctl create``
 2.  Create any partitions as necessary. I suggest a separate boot partition and a data partition.
 
-	1.  For EFI booting, you will need to create yet another partition specially for EFI, FAT32-formatted; 100MB should be enough.
+	a.  For EFI booting, you will need to create yet another partition specially for EFI, FAT32-formatted; 100MB should be enough.
 
 3.  Install the bootloader:
 
 	1.  Mount the boot partition onto some ``$MNT`` directory. Let ``$BOOT`` be the mounted boot directory, which should either be ``$MNT/`` or ``$MNT/boot/``.
 	2.  Run ``./imgctl install $BOOT``. If it doesn't detect the device correctly, cancel it with Ctrl-C and re-run ``./imgctl install $BOOT /dev/$DEVICE``.
 
-		1.  You can give extra options to grub-install via the ``GRUB_OPTS`` envvar.
-		2.  For example, for EFI booting, you would need ``GRUB_OPTS="--efi-directory=$EFI" ./imgctl install $BOOT`` where ``$EFI`` is the path to the mounted EFI partition from 2.a.
+		- You can give extra options to ``grub-install`` via the ``GRUB_OPTS`` envvar.
+		- For example, for EFI booting, you would need ``GRUB_OPTS="--efi-directory=$EFI" ./imgctl install $BOOT`` where ``$EFI`` is the path to the mounted EFI partition from 2.a.
 
 	3.  Unmount the boot partition from ``$MNT``.
 
@@ -30,9 +30,8 @@ Instructions
 	2.  Copy your ISOs to ``$DATA/img/``
 	3.  (Unnecessary for most people) Copy any overrides to ``$DATA/linux/`` and ``$DATA/initrd/``
 
-		* The override for ``XXXX.iso`` should be named ``XXXX``.
-		* e.g. ``XXXX.vmlinuz`` or ``XXXX.initrd.gz``
-		* e.g. Backtrack 5 needs a newer version of casper-generated ``/scripts/`` for its initrd
+		- The override for ``XXXX.iso`` should be named ``XXXX``, e.g. ``XXXX.vmlinuz`` or ``XXXX.initrd.gz``
+		- For example, Backtrack 5 needs a newer version of casper-generated ``/scripts/`` for its initrd.
 
 	4.  Umount the data partition from ``$MNT``.
 
