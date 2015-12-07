@@ -1,6 +1,5 @@
 version=3
-# mirror has problems
-#http://switch.dl.sourceforge.net/project/systemrescuecd/sysresccd-x86/(\d.+)/systemrescuecd-x86-(\d.+).iso \
-#  debian ./uscan
-http://freefr.dl.sourceforge.net/project/systemrescuecd/sysresccd-x86/(\d.+)/systemrescuecd-x86-(\d.+).iso \
+http://heanet.dl.sourceforge.net/project/systemrescuecd/sysresccd-x86/(\d.+)/systemrescuecd-x86-(\d.+).iso \
   debian ./uscan
+#http://freefr.dl.sourceforge.net/project/systemrescuecd/sysresccd-x86/(\d.+)/systemrescuecd-x86-(\d.+).iso \
+#  debian ./uscan
