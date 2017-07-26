@@ -1,5 +1,5 @@
 version=3
-http://heanet.dl.sourceforge.net/project/systemrescuecd/sysresccd-x86/(\d.+)/systemrescuecd-x86-(\d.+).iso \
-  debian ./uscan
-#http://freefr.dl.sourceforge.net/project/systemrescuecd/sysresccd-x86/(\d.+)/systemrescuecd-x86-(\d.+).iso \
-#  debian ./uscan
+opts=filenamemangle=s/.*\/(\d(?:\.\d)+)\/?$/systemrescuecd-x86-$1.iso/,\
+downloadurlmangle=s/\/sysresccd-x86\/(.*)\//\/sysresccd-x86\/$1\/systemrescuecd-x86-$1.iso/ \
+https://sourceforge.net/projects/systemrescuecd/files/sysresccd-x86/ (\d(?:\.\d)+)/? \
+ debian ./uscan
