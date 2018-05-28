@@ -24,9 +24,11 @@ case "$1" in
 	echo "$2	$3" > "$USCAN_PACKAGE.version"
 	;;
 "")
+	len=$(for i in *.watch; do echo "${#i}"; done | sort -n | tail -n1)
 	for i in *.watch; do
-		uscan_watch "$i"
+		( prefix=$(printf "%--$((len - 6))s | " "${i%.watch}"); uscan_watch "$i" | sed -e "s/^/$prefix/" ) &
 	done
+	wait
 	;;
 *)
 	if [ -f "$1" ]; then

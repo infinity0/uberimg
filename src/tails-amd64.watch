@@ -1,0 +1,3 @@
+version=3
+https://tails.boum.org/torrents/files/tails-amd64-(.+).torrent \
+  debian ./uscan

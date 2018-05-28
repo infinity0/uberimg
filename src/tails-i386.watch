@@ -1,4 +1,0 @@
-version=3
-#http://dl.amnesia.boum.org/tails/stable/tails-i386-(.+)/tails-i386-(.+).iso \
-https://tails.boum.org/torrents/files/tails-i386-(.+).torrent \
-  debian ./uscan
