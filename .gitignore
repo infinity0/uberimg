@@ -2,3 +2,4 @@
 /bin/*.iso.*
 /bin/*.torrent
 /bin/*.zsync
+/bin/*.zip
