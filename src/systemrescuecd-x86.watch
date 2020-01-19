@@ -1,5 +1,4 @@
 version=3
-opts=filenamemangle=s/.*\/(\d(?:\.\d)+)\/?$/systemrescuecd-x86-$1.iso/,\
-downloadurlmangle=s/\/sysresccd-x86\/(.*)\//\/sysresccd-x86\/$1\/systemrescuecd-x86-$1.iso/ \
-https://sourceforge.net/projects/systemrescuecd/files/sysresccd-x86/ (\d(?:\.\d)+)/? \
+https://www.system-rescue-cd.org/Download/ \
+ https://osdn.net/projects/systemrescuecd/storage/releases/.+/systemrescuecd-(.+).iso \
  debian ./uscan

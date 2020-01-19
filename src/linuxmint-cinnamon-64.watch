@@ -1,3 +1,6 @@
 version=3
-https://torrents.linuxmint.com/ (?:https://torrents.linuxmint.com/)?torrents/linuxmint-(\d{1,3}(?:\..+)?)-cinnamon-(?:dvd-)?64bit.iso.torrent \
+# their website is shitty and outputs gzip even when the user-agent doesn't want it
+opts="user-agent=Mozilla/5.0"
+https://webcache.googleusercontent.com/search?q=cache:https://torrents.linuxmint.com/ \
+  (?:https://torrents.linuxmint.com/)?torrents/linuxmint-(\d{1,3}(?:\..+)?)-cinnamon-(?:dvd-)?64bit.iso.torrent \
   debian ./uscan

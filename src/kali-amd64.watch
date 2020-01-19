@@ -1,6 +1,6 @@
 version=3
 # main page http://www.kali.org/downloads/ does not support uncompressed output
 # so grab latest version from a sane page and mangle the url into a torrent url
-opts=downloadurlmangle=s|.*/([^/]*).iso|http://images.kali.org/$1.torrent|,filenamemangle=s|(.*).iso|$1.torrent| \
-http://archive.kali.org/kali-images/current/kali-linux-(\d.+)-amd64.iso \
+opts=downloadurlmangle=s|.*/([^/]*).iso|http://images.offensive-security.com/$1.iso.torrent|,filenamemangle=s|(.*).iso|$1.torrent| \
+http://archive.kali.org/kali-images/current/kali-linux-([^-]+)-amd64.iso \
   debian ./uscan

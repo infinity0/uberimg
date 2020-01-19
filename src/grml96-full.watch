@@ -1,3 +1,4 @@
 version=3
+opts="uversionmangle=s/-rc/~rc/" \
 http://download.grml.org/grml96-full_(.+).iso.torrent \
-  debian ./uscan
+ debian ./uscan
