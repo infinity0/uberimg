@@ -1,4 +1,3 @@
 version=3
-http://l2.mxrepo.com/torrents/ \
- (?:http://l2.mxrepo.com/torrents/)?MX-(.+)_x64.torrent \
+http://l2.mxrepo.com/torrents/MX-([^_]+)_ahs_x64\.(?:iso\.)?torrent \
  debian ./uscan

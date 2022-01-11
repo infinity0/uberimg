@@ -1,4 +1,4 @@
 version=3
-https://manjaro.org/download/official/xfce/ \
- https://osdn.net/dl/manjaro/manjaro-xfce-([^-]+)-\d+-linux\d+.iso.torrent \
+https://manjaro.org/downloads/official/xfce/ \
+ https://download.manjaro.org/xfce/(?:.+)/manjaro-xfce-([^-]+)-\d+-linux\d+.iso.torrent \
  debian ./uscan
