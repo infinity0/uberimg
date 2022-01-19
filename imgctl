@@ -9,6 +9,7 @@
 #     grub-install cannot detect loop device partitions properly.
 #     (experimental branch can do this, it's unnecessary there.)
 GRUB_MODULES="${GRUB_MODULES:-}"
+GRUB_TARGET="${GRUB_TARGET:-x86_64-efi}"
 
 GRUB_OPTS="--no-floppy $GRUB_OPTS"
 
@@ -201,7 +202,7 @@ i | install )
 	sudo -k  # for extra safety
 	sudo /usr/sbin/grub-install --modules="$GRUB_MODULES" $GRUB_OPTS \
 	  --uefi-secure-boot --efi-directory="$BOOT" --removable \
-	  --target x86_64-efi --boot-directory="$BOOT" "$DEV"
+	  --target="${GRUB_TARGET}" --boot-directory="$BOOT" "$DEV"
 	echo >&2 "WARNING: you may need to manually install an older grubx64.efi, see launchpad #1851311"
 	sudo cp ./grub.cfg ./isodetect.cfg "$BOOT/grub/"
 	if ! mountpoint -q "$BOOT"; then
