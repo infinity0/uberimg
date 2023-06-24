@@ -10,17 +10,17 @@ Instructions
 ============
 
 1.  Either (a) insert your physical device (then umount all partitions, if your system does auto-mounting), or (b) create a virtual disk image file using ``./imgctl create``
-2.  Create any partitions as necessary. I suggest a separate boot partition and a data partition.
+2.  Create any partitions as necessary. I suggest a separate small boot partition and a much larger data partition.
 
-	a.  For EFI booting, you will need to create yet another partition specially for EFI, FAT32-formatted; 100MB should be enough.
+	a.  For EFI booting, your boot partition **MUST** be FAT32-formatted; 100MB should be enough. If you want to also support legacy BIOS boot mode on the same device, then you'll need a second "boot" partition of 2MB with the ``bios_grub`` partition flag.
 
 3.  Install the bootloader:
 
 	1.  Mount the boot partition onto some ``$MNT`` directory. Let ``$BOOT`` be the mounted boot directory, which should either be ``$MNT/`` or ``$MNT/boot/``.
 	2.  Run ``./imgctl install $BOOT``. If it doesn't detect the device correctly, cancel it with Ctrl-C and re-run ``./imgctl install $BOOT /dev/$DEVICE``.
 
-		- You can give extra options to ``grub-install`` via the ``GRUB_OPTS`` envvar.
-		- For example, for EFI booting, you would need ``GRUB_OPTS="--efi-directory=$EFI" ./imgctl install $BOOT`` where ``$EFI`` is the path to the mounted EFI partition from 2.a.
+		- You can pass extra options to ``grub-install`` via the ``GRUB_OPTS`` envvar.
+		- We install the x86_64-efi target by default. You can change this by passing e.g. ``GRUB_TARGET=i386-pc`` as an envvar. You can install multiple targets onto the same device, but your device layout must be compatible with all the targets, see the notes in step (2).
 
 	3.  Unmount the boot partition from ``$MNT``.
 
