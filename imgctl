@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Utility to create bootable disk images and/or devices.
 
 # Extra modules for your GRUB install, normally can be empty. For example,
@@ -10,6 +10,7 @@
 #     (experimental branch can do this, it's unnecessary there.)
 GRUB_MODULES="${GRUB_MODULES:-}"
 GRUB_TARGET="${GRUB_TARGET:-x86_64-efi}"
+QEMU_TARGET="${GRUB_TARGET/-*/}"
 
 GRUB_OPTS="--no-floppy $GRUB_OPTS"
 
@@ -199,12 +200,16 @@ i | install )
 	test "${DEV#/dev/loop}" != "${DEV}" && GRUB_MODULES="$GRUB_MODULES part_msdos part_gpt"
 
 	require_accept "BOOT=$BOOT; DEV=$DEV; install?"
-	sudo -k  # for extra safety
+	set -x
 	sudo /usr/sbin/grub-install --modules="$GRUB_MODULES" $GRUB_OPTS \
-	  --uefi-secure-boot --efi-directory="$BOOT" --removable \
+	  --no-uefi-secure-boot --efi-directory="$BOOT" --removable \
 	  --target="${GRUB_TARGET}" --boot-directory="$BOOT" "$DEV"
-	echo >&2 "WARNING: you may need to manually install an older grubx64.efi, see launchpad #1851311"
-	sudo cp ./grub.cfg ./isodetect.cfg "$BOOT/grub/"
+	set +x
+	if [ "${GRUB_TARGET%-efi}" != "$GRUB_TARGET" ]; then
+		echo >&2 "WARNING: installing *without* UEFI secure boot since the latter causes us problems like launchpad #1851311"
+	fi
+	sudo cp ./isodetect.cfg "$BOOT/grub/"
+	sudo cp -i ./grub.cfg "$BOOT/grub/"
 	if ! mountpoint -q "$BOOT"; then
 		if mountpoint -q "$BOOT/.." && [ "$(basename "$BOOT")" = "boot" ]; then
 			sed -i -re 's,(\s)/grub/,\1/boot/grub/,g' "$BOOT/grub/grub.cfg"
@@ -216,10 +221,18 @@ i | install )
 	fi
 	;;
 t | test )
-	TARGET=${1}
+	TARGET="${1}"
 	sync # ensure recent changes synced to disk
 	if [ -b "$TARGET" ]; then sudo chown $(id -u) "$TARGET"*; fi
-	qemu-system-$(uname -m) $QEMU_OPTS "$TARGET"
+	if [ "${GRUB_TARGET%-efi}" != "$GRUB_TARGET" ]; then
+		if ! [ -f /usr/share/ovmf/OVMF.fd ]; then
+			echo >&2 "You need to install the ovmf package to test an EFI target"
+		fi
+		QEMU_OPTS="-bios /usr/share/ovmf/OVMF.fd $QEMU_OPTS"
+	fi
+	set -x
+	qemu-system-"${QEMU_TARGET}" $QEMU_OPTS "$TARGET"
+	set +x
 	;;
 h | help | -h | --help )
 	cat >&2 <<-EOF
@@ -246,7 +259,7 @@ h | help | -h | --help )
 	      e.g. <boot_dir> mounted at /dev/loop0p3 -> <device> = /dev/loop0
 
 	test <image|device>
-	    Use qemu-system-\$(uname -m) to test <image|device>.
+	    Use qemu-system-${QEMU_TARGET} to test <image|device>.
 
 	EOF
 	;;
