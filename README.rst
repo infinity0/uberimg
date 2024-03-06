@@ -40,3 +40,14 @@ Instructions
 If you get *"Unsupported ISO type"* for any of your ISOs, file me a bug! If this script can be modified to support it, I will do so; otherwise I will tell you to file a bug to the upstream ISO developers.
 
 You can also try to fix the bug yourself by tweaking ``isodetect.cfg``, or playing around with overrides in step 4.3. above.
+
+Known bugs
+==========
+
+Sometimes the installation process doesn't work if you install over an existing installation, e.g. the result goes into a boot loop. To fix:
+
+1. Backup any files you manually edited in boot/grub/*
+2. Wipe the boot partition, and re-apply {esp, boot} partition flags.
+3. Wipe the bios_grub partition, and re-apply {bios_grub} partition flags.
+4. Install it again, and test it with QEMU.
+5. It should now work. Restore your files from step 1.
