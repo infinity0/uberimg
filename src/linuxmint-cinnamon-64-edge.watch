@@ -1,0 +1,3 @@
+version=3
+https://linuxmint.com/torrents/linuxmint-(\d{1,3}(?:\..+)?)-cinnamon-(?:dvd-)?64bit-edge.iso.torrent \
+  debian ./uscan

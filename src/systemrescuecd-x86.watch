@@ -1,5 +1,5 @@
 version=3
 opts="downloadurlmangle=s|/download$||,filenamemangle=s|(.*/)?([^/]+)/download$|$2|" \
-https://www.system-rescue-cd.org/Download/ \
- https://sourceforge.net/projects/systemrescuecd/files/.+/.+/systemrescue-(.+)-amd64.iso/download \
+https://www.system-rescue.org/Download/ \
+ https://fastly-cdn.system-rescue.org/releases/.+/systemrescue-(.+)-amd64.iso \
  debian ./uscan

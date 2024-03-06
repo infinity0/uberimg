@@ -1,7 +1,7 @@
 #!/bin/sh
 # Uses debian's uscan utility to download newer versions of ISOs when they become available.
 # USCAN_OPTS=--debug ./uscan
-# USCAN_OPTS=--force-download ./uscan
+# USCAN_OPTS=--force-download ./uscan # updates .version files
 
 cd "$(dirname "$0")"
 
