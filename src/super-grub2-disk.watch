@@ -4,4 +4,3 @@ Source: http://www.supergrubdisk.org/category/download/supergrub2diskdownload/
 Matching-Pattern: https://sourceforge.net/projects/supergrub2/files/.+/super_grub2_disk_.+/super_grub2_disk_hybrid_(.+).iso/download
 Downloadurlmangle: s|/download$||
 Filenamemangle: s|(.*/)?([^/]+)/download$|$2|
-Update-Script: ./uscan

@@ -2,4 +2,3 @@ Version: 5
 
 Source: http://torrent.unix-ag.uni-kl.de/torrents/
 Matching-Pattern: KNOPPIX_V(.+)DVD-(?:[\w-]+)-EN.torrent
-Update-Script: ./uscan

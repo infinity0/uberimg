@@ -7,10 +7,12 @@
 #   USCAN_OPTS=--force-download ./uscan
 # Debug any problems:
 #   USCAN_OPTS=--debug ./uscan
+#
+# TODO: spurious tarballs being created, fixed by https://salsa.debian.org/debian/devscripts/-/merge_requests/603
 
 cd "$(dirname "$0")"
 
-BIN="$(realpath "../bin")"
+BINPATH="../bin"
 
 case "$USCAN_OPTS" in
 *--download*)
@@ -22,20 +24,27 @@ esac
 uscan_watch() {
 	local package="${1%.watch}"
 	local version=0
-	if [ -f "$package.version" ]; then
-		if [ -f "$BIN/$(cut -f2 $package.version)" ]; then
-			version="$(cut -f1 $package.version)"
+	if [ -f "${package}.version" ]; then
+		if [ -f "$BINPATH/$(cut -f2 ${package}.version)" ]; then
+			version="$(cut -f1 ${package}.version)"
 		fi
 	fi
-	export USCAN_PACKAGE="$package" # for uscan's Update-Script functionality
-	uscan $USCAN_OPTS --no-symlink --upstream-version "$version" --package "$package" --watchfile "$package.watch" --destdir "$BIN"
+	uscan $USCAN_OPTS --dehs \
+	  --watchfile "$package.watch" --package "$package" --upstream-version "$version" \
+	  --no-symlink --destdir "$BINPATH" | python -c '
+import xml.etree.ElementTree as ET
+import sys
+tree = ET.parse(sys.stdin)
+root = tree.getroot()
+ver = root.find("upstream-version")
+path = root.find("target-path")
+if ver is not None and path is not None:
+	with open("'"${package}"'.version", "w") as fp:
+		print("%s\t%s" % (ver.text, path.text), file=fp)
+'
 }
 
 case "$1" in
---upstream-version)
-	# called by uscan's Update-Script functionality, we set USCAN_PACKAGE earlier
-	echo "$2	$3" > "$USCAN_PACKAGE.version"
-	;;
 "")
 	len=$(for i in *.watch; do echo "${#i}"; done | sort -n | tail -n1)
 	for i in *.watch; do

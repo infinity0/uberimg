@@ -4,4 +4,3 @@ Source: https://www.system-rescue.org/Download/
 Matching-Pattern: https://fastly-cdn.system-rescue.org/releases/.+/systemrescue-(.+)-amd64.iso
 Downloadurlmangle: s|/download$||
 Filenamemangle: s|(.*/)?([^/]+)/download$|$2|
-Update-Script: ./uscan

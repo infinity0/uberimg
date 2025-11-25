@@ -2,4 +2,3 @@ Version: 5
 
 Source: http://downloads.raspberrypi.org/raspbian/images/(.+)-(.+)/
 Matching-Pattern: (.+)-raspbian(?:.*).zip.torrent
-Update-Script: ./uscan

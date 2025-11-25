@@ -4,4 +4,3 @@ Source: https://pub.linuxmint.io/stable/(\d[\d\.]+)/
 Matching-Pattern: linuxmint-(\d{1,3}(?:\..+)?)-cinnamon-(?:dvd-)?64bit.iso
 # Prefer torrents
 Download-Url-Mangle: s,https://pub.linuxmint.io/stable/(\d[\d\.]+)/,https://www.linuxmint.com/torrents/,;s,\.iso$,.iso.torrent,
-Update-Script: ./uscan
