@@ -209,7 +209,7 @@ i | install )
 		echo >&2 "WARNING: installing *without* UEFI secure boot since the latter causes us problems like launchpad #1851311"
 	fi
 	sudo cp ./isodetect.cfg "$BOOT/grub/"
-	sudo cp -i ./grub.cfg "$BOOT/grub/"
+	sudo cp -i ./grub.cfg "$BOOT/grub/" || true
 	if ! mountpoint -q "$BOOT"; then
 		if mountpoint -q "$BOOT/.." && [ "$(basename "$BOOT")" = "boot" ]; then
 			sed -i -re 's,(\s)/grub/,\1/boot/grub/,g' "$BOOT/grub/grub.cfg"
