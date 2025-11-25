@@ -1,5 +1,6 @@
 Version: 5
 
 Source: https://download.grml.org/
+# No torrent available since ~2025
 Matching-Pattern: grml-full-(.+)-amd64.iso
-Uversionmangle: s/-rc/~rc/
+Uversion-Mangle: s/-rc/~rc/

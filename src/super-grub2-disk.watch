@@ -2,5 +2,5 @@ Version: 5
 
 Source: http://www.supergrubdisk.org/category/download/supergrub2diskdownload/
 Matching-Pattern: https://sourceforge.net/projects/supergrub2/files/.+/super_grub2_disk_.+/super_grub2_disk_hybrid_(.+).iso/download
-Downloadurlmangle: s|/download$||
-Filenamemangle: s|(.*/)?([^/]+)/download$|$2|
+Download-Url-Mangle: s|/download$||
+Filename-Mangle: s|(.*/)?([^/]+)/download$|$2|

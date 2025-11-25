@@ -1,6 +1,7 @@
 Version: 5
 
 Source: https://www.system-rescue.org/Download/
+# No torrent available since ~ever
 Matching-Pattern: https://fastly-cdn.system-rescue.org/releases/.+/systemrescue-(.+)-amd64.iso
-Downloadurlmangle: s|/download$||
-Filenamemangle: s|(.*/)?([^/]+)/download$|$2|
+Download-Url-Mangle: s|/download$||
+Filename-Mangle: s|(.*/)?([^/]+)/download$|$2|

@@ -2,4 +2,6 @@ Version: 5
 
 Source: https://manjaro.org/products/download/x86
 Matching-Pattern: https://download.manjaro.org/xfce/(?:.+)/manjaro-xfce-([^-]+)-\d+-linux\d+.iso
+# Prefer torrents, even though link not directly available on source
+Download-Url-Mangle: s/$/.torrent/
 Filename-Mangle: s/$/.torrent/
