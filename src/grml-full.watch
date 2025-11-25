@@ -1,0 +1,6 @@
+Version: 5
+
+Source: https://download.grml.org/
+Matching-Pattern: grml-full-(.+)-amd64.iso
+Uversionmangle: s/-rc/~rc/
+Update-Script: ./uscan

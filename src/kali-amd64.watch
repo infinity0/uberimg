@@ -1,3 +1,5 @@
-version=3
-https://kali.download/base-images/current/kali-linux-([^-]+)-live-amd64.iso.torrent \
-  debian ./uscan
+Version: 5
+
+Source: https://kali.download/base-images/current/
+Matching-Pattern: kali-linux-([^-]+)-live-amd64.iso.torrent
+Update-Script: ./uscan

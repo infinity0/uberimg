@@ -1,4 +1,5 @@
-version=3
-ftp://ftp.mirrorservice.org/sites/releases.ubuntu.com/(\d+\.\d+)/ubuntu-(.+)-desktop-amd64.iso.torrent \
-  debian ./uscan
-# can't just use (.+) for dir pattern due to debian bug #696492
+Version: 5
+
+Source: https://ftp.mirrorservice.org/sites/releases.ubuntu.com/(\d+\.\d+)/
+Matching-Pattern: ubuntu-(.+)-desktop-amd64.iso.torrent
+Update-Script: ./uscan

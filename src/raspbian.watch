@@ -1,3 +1,5 @@
-version=3
-http://downloads.raspberrypi.org/raspbian/images/(.+)-(.+)/(.+)-raspbian(?:.*).zip.torrent \
-  debian ./uscan
+Version: 5
+
+Source: http://downloads.raspberrypi.org/raspbian/images/(.+)-(.+)/
+Matching-Pattern: (.+)-raspbian(?:.*).zip.torrent
+Update-Script: ./uscan

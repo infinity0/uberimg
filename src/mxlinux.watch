@@ -1,3 +1,8 @@
-version=3
-http://l2.mxrepo.com/torrents/MX-([^_]+)_ahs_x64\.(?:iso\.)?torrent \
- debian ./uscan
+Version: 5
+
+#Source: https://mxlinux.org/torrent-files/
+#^ .torrent URL is loaded via AJAX, boo
+Source: https://l2.mxrepo.com/torrents/
+Matching-Pattern: MX-([^_]+)_Xfce_ahs_x64\.(?:iso\.)?torrent
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+Update-Script: ./uscan

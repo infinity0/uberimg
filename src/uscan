@@ -1,11 +1,23 @@
-#!/bin/sh
+#!/bin/bash
 # Uses debian's uscan utility to download newer versions of ISOs when they become available.
-# USCAN_OPTS=--debug ./uscan
-# USCAN_OPTS=--force-download ./uscan # updates .version files
+#
+# Check for updates, but don't write anything:
+#   ./uscan
+# Download updates and update .version files
+#   USCAN_OPTS=--force-download ./uscan
+# Debug any problems:
+#   USCAN_OPTS=--debug ./uscan
 
 cd "$(dirname "$0")"
 
-BIN=../bin
+BIN="$(realpath "../bin")"
+
+case "$USCAN_OPTS" in
+*--download*)
+	echo >&2 "$0: \"USCAN_OPTS=--download\" has no effect due to the way we run uscan, converting it to --force-download instead"
+	USCAN_OPTS="${USCAN_OPTS/--download/--force-download}"
+	;;
+esac
 
 uscan_watch() {
 	local package="${1%.watch}"
@@ -15,12 +27,13 @@ uscan_watch() {
 			version="$(cut -f1 $package.version)"
 		fi
 	fi
-	export USCAN_PACKAGE="$package"
-	uscan $USCAN_OPTS --no-symlink --upstream-version "$version" --package "$package" --watchfile "$package.watch" --download --pasv --destdir "$BIN"
+	export USCAN_PACKAGE="$package" # for uscan's Update-Script functionality
+	uscan $USCAN_OPTS --no-symlink --upstream-version "$version" --package "$package" --watchfile "$package.watch" --destdir "$BIN"
 }
 
 case "$1" in
 --upstream-version)
+	# called by uscan's Update-Script functionality, we set USCAN_PACKAGE earlier
 	echo "$2	$3" > "$USCAN_PACKAGE.version"
 	;;
 "")
@@ -32,7 +45,7 @@ case "$1" in
 	;;
 *)
 	if [ -f "$1" ]; then
-		uscan_watch "$1"
+		uscan_watch "${1%.version}"
 	else
 		exit 2
 	fi

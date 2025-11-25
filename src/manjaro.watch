@@ -1,4 +1,6 @@
-version=3
-https://manjaro.org/download/ \
- https://download.manjaro.org/xfce/(?:.+)/manjaro-xfce-([^-]+)-\d+-linux\d+.iso.torrent \
- debian ./uscan
+Version: 5
+
+Source: https://manjaro.org/products/download/x86
+Matching-Pattern: https://download.manjaro.org/xfce/(?:.+)/manjaro-xfce-([^-]+)-\d+-linux\d+.iso
+Filename-Mangle: s/$/.torrent/
+Update-Script: ./uscan

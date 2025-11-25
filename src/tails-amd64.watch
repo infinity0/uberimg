@@ -1,3 +1,5 @@
-version=3
-https://tails.boum.org/torrents/files/tails-amd64-(.+).iso.torrent \
-  debian ./uscan
+Version: 5
+
+Source: https://tails.boum.org/torrents/files/
+Matching-Pattern: tails-amd64-(.+).iso.torrent
+Update-Script: ./uscan

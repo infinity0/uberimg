@@ -1,5 +1,7 @@
-version=3
-opts="downloadurlmangle=s|/download$||,filenamemangle=s|(.*/)?([^/]+)/download$|$2|" \
-http://www.supergrubdisk.org/category/download/supergrub2diskdownload/ \
- https://sourceforge.net/projects/supergrub2/files/.+/super_grub2_disk_.+/super_grub2_disk_hybrid_(.+).iso/download \
- debian ./uscan
+Version: 5
+
+Source: http://www.supergrubdisk.org/category/download/supergrub2diskdownload/
+Matching-Pattern: https://sourceforge.net/projects/supergrub2/files/.+/super_grub2_disk_.+/super_grub2_disk_hybrid_(.+).iso/download
+Downloadurlmangle: s|/download$||
+Filenamemangle: s|(.*/)?([^/]+)/download$|$2|
+Update-Script: ./uscan
