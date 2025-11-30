@@ -1,0 +1,5 @@
+Version: 5
+
+Source: https://www.dragonflybsd.org/download/
+# No torrent available since ~ever
+Matching-Pattern: https://mirror-master.dragonflybsd.org/iso-images/dfly-x86_64-@ANY_VERSION@_REL.iso.bz2

@@ -14,23 +14,20 @@ cd "$(dirname "$0")"
 
 BINPATH="../bin"
 
-case "$USCAN_OPTS" in
-*--download*)
-	echo >&2 "$0: \"USCAN_OPTS=--download\" has no effect due to the way we run uscan, converting it to --force-download instead"
-	USCAN_OPTS="${USCAN_OPTS/--download/--force-download}"
-	;;
-esac
-
 uscan_watch() {
 	local package="${1%.watch}"
 	local version=0
 	if [ -f "${package}.version" ]; then
-		if [ -f "$BINPATH/$(cut -f2 ${package}.version)" ]; then
-			version="$(cut -f1 ${package}.version)"
+		binfile="$(cut -f2 "${package}.version")"
+		version="$(cut -f1 ${package}.version)"
+		if ! [ -f "$binfile" -o -f "${binfile%.*}" ]; then
+			echo >&2 "$0: recorded version $version not found as ${binfile} or ${binfile%.*}"
+			version=
 		fi
 	fi
+	test -z "$debug" || set -x
 	uscan $USCAN_OPTS --dehs \
-	  --watchfile "$package.watch" --package "$package" --upstream-version "$version" \
+	  --watchfile "${package}.watch" --package "$package" --upstream-version "$version" \
 	  --no-symlink --destdir "$BINPATH" | python -c '
 import xml.etree.ElementTree as ET
 import sys
@@ -42,21 +39,53 @@ if ver is not None and path is not None:
 	with open("'"${package}"'.version", "w") as fp:
 		print("%s\t%s" % (ver.text, path.text), file=fp)
 '
+	{ test -z "$debug" || set +x; } 2>/dev/null
 }
 
-case "$1" in
-"")
-	len=$(for i in *.watch; do echo "${#i}"; done | sort -n | tail -n1)
-	for i in *.watch; do
-		( prefix=$(printf "%--$((len - 6))s | " "${i%.watch}"); uscan_watch "$i" | sed -e "s/^/$prefix/" ) &
-	done
-	wait
-	;;
-*)
-	if [ -f "$1" ]; then
-		uscan_watch "${1%.version}"
-	else
-		exit 2
-	fi
-	;;
-esac
+names=()
+for arg in "$@"; do
+	case "$arg" in
+	--debug)
+		debug=1;;
+	--no-debug)
+		debug=;;
+	--verbose)
+		verbose=1;;
+	--no-verbose)
+		verbose=;;
+	--download)
+		download=1;;
+	--no-download)
+		download=;;
+	*.watch)
+		names+=( "$arg" );;
+	*.version)
+		names+=( "${arg%.version}.watch" );;
+	*)
+		names+=( "${arg}.watch" );;
+	esac
+done
+
+if [ -n "$debug" ]; then
+	USCAN_OPTS="${USCAN_OPTS} --debug"
+fi
+if [ -n "$verbose" ]; then
+	USCAN_OPTS="${USCAN_OPTS} --verbose"
+fi
+if [ -n "$download" ]; then
+	# uscan specifically ignores --download for the specific case of how we're using it, unfortunately
+	USCAN_OPTS="${USCAN_OPTS} --force-download"
+fi
+if [[ "${#names[@]}" -eq 0 ]]; then
+	names+=( *.watch )
+fi
+
+if [ -n "$debug" ]; then
+	echo >&2 "USCAN_OPTS: $USCAN_OPTS"
+	echo >&2 "names: ${names[@]}"
+fi
+len=$(for i in "${names[@]}"; do echo "${#i}"; done | sort -n | tail -n1)
+for i in "${names[@]}"; do
+	( prefix=$(printf "%--$((len - 6))s | " "${i%.watch}"); uscan_watch "$i" 2>&1 | sed -e "s/^/$prefix/" ) &
+done
+wait

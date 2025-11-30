@@ -1,0 +1,4 @@
+Version: 5
+
+Source: https://gobolinux.org/downloads.html
+Matching-Pattern: https://github.com/gobolinux/LiveCD/releases/download/(?:.+)/GoboLinux-(.+)-x86_64.iso.torrent

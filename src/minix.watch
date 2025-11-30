@@ -1,0 +1,4 @@
+Version: 5
+
+Source: https://wiki.minix3.org/doku.php?id=www:download:start
+Matching-Pattern: http://download.minix3.org/iso/minix_R@ANY_VERSION@-(?:\w+).iso.bz2.torrent

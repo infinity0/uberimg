@@ -1,0 +1,5 @@
+Version: 5
+
+Source: https://static.redox-os.org/releases/(\d[.\d]*)/x86_64/
+# No torrent available since ~ever
+Matching-Pattern: redox_demo_x86_64_(\d[-_.\d]*)_livedisk.iso.zst

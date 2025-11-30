@@ -1,0 +1,4 @@
+Version: 5
+
+Source: https://www.ghostbsd.org/download
+Matching-Pattern: https://download.ghostbsd.org/releases/amd64/(?:.*)/GhostBSD-(\d[.\d]+-R[.\w]+).iso.torrent
