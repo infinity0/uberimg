@@ -1,13 +1,17 @@
 #!/bin/bash
 # Utility to create bootable disk images and/or devices.
-
-# Extra modules for your GRUB install, normally can be empty. For example,
 #
-# "luks cryptodisk" if you put your ISOs on an encrypted partition
-# "part_gpt" if you create a GPT partition table
-# "part_msdos" if you're testing from a loopback device, since released
-#     grub-install cannot detect loop device partitions properly.
-#     (experimental branch can do this, it's unnecessary there.)
+# Environment vars:
+# GRUB_TARGET
+#   Hardward architecture of grub to install, default x86_64-efi. See `man
+#   grub-install` for other options, "i386-pc" being common for older hardware.
+# GRUB_MODULES
+#   Extra modules for your GRUB install, normally can be empty. For example,
+#   luks cryptodisk
+#     if you put your ISOs on an encrypted partition
+#   part_gpt
+#     if you create a GPT partition table
+
 GRUB_MODULES="${GRUB_MODULES:-}"
 GRUB_TARGET="${GRUB_TARGET:-x86_64-efi}"
 QEMU_TARGET="${GRUB_TARGET/-*/}"
@@ -190,6 +194,11 @@ u | umount )
 i | install )
 	BOOT=${1}
 	DEV=${2:-$(device_ancestor "$(blockdev_for_dir "$1")")} || exit 1
+	if [ -d "$BOOT/efi" ]; then
+		EFI="$BOOT/efi"
+	else
+		EFI="$BOOT"
+	fi
 
 	set -o errexit
 	#mkdir -p "$BOOT"
@@ -199,10 +208,10 @@ i | install )
 	# detect loop device partitions properly. (experimental branch can do this)
 	test "${DEV#/dev/loop}" != "${DEV}" && GRUB_MODULES="$GRUB_MODULES part_msdos part_gpt"
 
-	require_accept "BOOT=$BOOT; DEV=$DEV; install?"
+	require_accept "BOOT=$BOOT; EFI=$EFI; DEV=$DEV; install?"
 	set -x
 	sudo /usr/sbin/grub-install --modules="$GRUB_MODULES" $GRUB_OPTS \
-	  --no-uefi-secure-boot --efi-directory="$BOOT" --removable \
+	  --no-uefi-secure-boot --efi-directory="$EFI" --removable \
 	  --target="${GRUB_TARGET}" --boot-directory="$BOOT" "$DEV"
 	set +x
 	if [ "${GRUB_TARGET%-efi}" != "$GRUB_TARGET" ]; then
