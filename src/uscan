@@ -9,10 +9,28 @@
 #   USCAN_OPTS=--debug ./uscan
 #
 # TODO: spurious tarballs being created, fixed by https://salsa.debian.org/debian/devscripts/-/merge_requests/603
+# dep/apt: uscan
+# dep/apt: python3
+set -e
 
 cd "$(dirname "$0")"
 
 BINPATH="../bin"
+httpd_init() {
+	HTTPDIR="$(mktemp --tmpdir -d uberimg-uscan.XXXXXXX || exit 3)"
+	#PORT=$((10000 + RANDOM))
+	PORT=39263 # hardcoded in watch files
+	test -z "$debug" || set -x
+	python -m http.server -d "$HTTPDIR" "$PORT" &
+	HTTPPID="$!"
+	{ test -z "$debug" || set +x; } 2>/dev/null
+}
+httpd_cleanup() {
+	test -z "$debug" || set -x
+	kill "$HTTPPID"
+	rm -rf "$HTTPDIR"
+	{ test -z "$debug" || set +x; } 2>/dev/null
+}
 
 uscan_watch() {
 	local package="${1%.watch}"
@@ -26,6 +44,9 @@ uscan_watch() {
 		fi
 	fi
 	test -z "$debug" || set -x
+	if [ -x "${package}.geturl" ]; then
+		./"${package}.geturl" > "$HTTPDIR/${package}.html"
+	fi
 	uscan $USCAN_OPTS --dehs \
 	  --watchfile "${package}.watch" --package "$package" --upstream-version "$version" \
 	  --no-symlink --destdir "$BINPATH" | python -c '
@@ -84,8 +105,14 @@ if [ -n "$debug" ]; then
 	echo >&2 "USCAN_OPTS: $USCAN_OPTS"
 	echo >&2 "names: ${names[@]}"
 fi
+
+httpd_init
+trap 'x=$?; httpd_cleanup; trap - EXIT' EXIT HUP INT QUIT PIPE TERM
+
 len=$(for i in "${names[@]}"; do echo "${#i}"; done | sort -n | tail -n1)
+children=()
 for i in "${names[@]}"; do
 	( prefix=$(printf "%--$((len - 6))s | " "${i%.watch}"); uscan_watch "$i" 2>&1 | sed -e "s/^/$prefix/" ) &
+	children+=( "$!" )
 done
-wait
+wait "${children[@]}"

@@ -1,0 +1,7 @@
+Version: 5
+
+Original-Source: https://system76.com/pop/download/
+# uscan does not support 2-part queries unfortunately
+Source: http://localhost:39263/pop-os_amd64-generic.html
+# No torrent available since ~ever
+Matching-Pattern: https://iso.pop-os.org/(?:.*)/amd64/generic/(?:.*)/pop-os_(.*)_amd64_generic_(.*).iso

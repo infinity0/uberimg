@@ -1,0 +1,9 @@
+#!/bin/sh
+# dep/apt: curl
+# dep/apt: jq
+set -e
+version="$(curl -fsSL "https://system76.com/pop/download/" | sed -nre "s/.*fetchRelease\s*\(['\"]([^'\"]+)['\"].*/\1/gp" | head -n1)"
+channel=generic
+arch=amd64
+url="$(curl -fsSL "https://api.pop-os.org/builds/${version}/${channel}?arch=${arch}" | jq -r .url)"
+printf '<a href="%s">%s</a>\n' "$url" "$version"
