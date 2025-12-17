@@ -1,7 +1,8 @@
 #!/bin/sh
-# dep/apt: curl
-# dep/apt: jq
-set -e
+# dep: apt/curl
+# dep: apt/jq
+set -e -o pipefail # POSIX:2022
+
 version="$(curl -fsSL "https://system76.com/pop/download/" | sed -nre "s/.*fetchRelease\s*\(['\"]([^'\"]+)['\"].*/\1/gp" | head -n1)"
 channel=generic
 arch=amd64

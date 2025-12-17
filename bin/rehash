@@ -1,2 +1,3 @@
 #!/bin/sh
+# Pass -d for a verbose dry-run
 exec gensums -25 "$@" -- -and -not -name "$(basename $0)" -and -not -name '*.torrent' -and -not -name '*SUMS*' -and -not -executable

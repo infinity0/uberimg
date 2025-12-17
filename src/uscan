@@ -8,10 +8,9 @@
 # Debug any problems:
 #   USCAN_OPTS=--debug ./uscan
 #
-# TODO: spurious tarballs being created, fixed by https://salsa.debian.org/debian/devscripts/-/merge_requests/603
-# dep/apt: uscan
-# dep/apt: python3
-set -e
+# dep: apt/uscan
+# dep: apt/python3
+set -e -o pipefail # POSIX:2022
 
 cd "$(dirname "$0")"
 
@@ -107,7 +106,7 @@ if [ -n "$debug" ]; then
 fi
 
 httpd_init
-trap 'x=$?; httpd_cleanup; trap - EXIT' EXIT HUP INT QUIT PIPE TERM
+trap 'httpd_cleanup; trap - EXIT' EXIT HUP INT QUIT PIPE TERM
 
 len=$(for i in "${names[@]}"; do echo "${#i}"; done | sort -n | tail -n1)
 children=()
